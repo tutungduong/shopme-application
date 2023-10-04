@@ -1,0 +1,28 @@
+package com.application.ecommerce.controller;
+
+
+import com.application.ecommerce.model.Category;
+import com.application.ecommerce.service.CategoryService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/category")
+public class CategoryController {
+
+    private CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @PostMapping("/create")
+    public String createCategory(@RequestBody Category category){
+        categoryService.createCategory(category);
+        return  "success";
+    }
+
+}
