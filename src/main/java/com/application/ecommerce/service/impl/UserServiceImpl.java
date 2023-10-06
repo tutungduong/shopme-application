@@ -1,7 +1,11 @@
 package com.application.ecommerce.service.impl;
 
+import com.application.ecommerce.config.MessageStrings;
+import com.application.ecommerce.dto.SignInDto;
+import com.application.ecommerce.dto.SignInResponseDto;
 import com.application.ecommerce.dto.SignUpResponseDto;
 import com.application.ecommerce.dto.SignupDto;
+import com.application.ecommerce.exceptions.AuthenticationFailException;
 import com.application.ecommerce.exceptions.CustomException;
 import com.application.ecommerce.model.AuthenticationToken;
 import com.application.ecommerce.model.User;
@@ -62,7 +66,6 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(e.getMessage());
         }
     }
-
     private String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
@@ -71,4 +74,34 @@ public class UserServiceImpl implements UserService {
                 .printHexBinary(digest).toUpperCase();
         return hash;
     }
+    @Override
+    public SignInResponseDto signIn(SignInDto signInDto) throws AuthenticationFailException, CustomException {
+        // first find User by email
+        User user = userRepository.findByEmail(signInDto.getEmail());
+        if(!Objects.nonNull(user)){
+            throw new AuthenticationFailException("user not present");
+        }
+        try {
+            // check if password is right
+            if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))){
+                // passwords do not match
+                throw  new AuthenticationFailException(MessageStrings.WRONG_PASSWORD);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            logger.error("hashing password failed {}", e.getMessage());
+            throw new CustomException(e.getMessage());
+        }
+
+        AuthenticationToken token = tokenService.getToken(user);
+
+        if(!Objects.nonNull(token)) {
+            // token not present
+            throw new CustomException(MessageStrings.AUTH_TOEKN_NOT_PRESENT);
+        }
+
+        return new SignInResponseDto ("success", token.getToken());
+    }
+
+
 }

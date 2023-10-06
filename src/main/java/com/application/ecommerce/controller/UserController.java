@@ -1,7 +1,10 @@
 package com.application.ecommerce.controller;
 
+import com.application.ecommerce.dto.SignInDto;
+import com.application.ecommerce.dto.SignInResponseDto;
 import com.application.ecommerce.dto.SignUpResponseDto;
 import com.application.ecommerce.dto.SignupDto;
+import com.application.ecommerce.exceptions.AuthenticationFailException;
 import com.application.ecommerce.exceptions.CustomException;
 import com.application.ecommerce.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,5 +29,10 @@ public class UserController {
     }
 
     // signin
+
+    @PostMapping("/signIn")
+    public SignInResponseDto Signup(@RequestBody SignInDto signInDto) throws CustomException, AuthenticationFailException {
+        return userService.signIn(signInDto);
+    }
 
 }
