@@ -5,7 +5,7 @@ import com.application.ecommerce.model.Category;
 import com.application.ecommerce.model.Product;
 import com.application.ecommerce.repository.ProductRepository;
 import com.application.ecommerce.service.ProductService;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

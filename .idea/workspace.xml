@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d798ca04-0812-46f9-ba60-d592d4e0feb5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/dto/SignInDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/dto/SignInResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/controller/WishlistController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/model/Wishlist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/repository/WishlistRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/WishlistService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/impl/WishlistServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/config/MessageStrings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/config/MessageStrings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/exceptions/ExceptionControllerAdvice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/exceptions/ExceptionControllerAdvice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/impl/ProductServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/impl/TokenServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/ecommerce/service/impl/TokenServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +91,8 @@
       <workItem from="1696429702782" duration="6179000" />
       <workItem from="1696496415591" duration="1323000" />
       <workItem from="1696513314667" duration="13372000" />
-      <workItem from="1696598461560" duration="4949000" />
+      <workItem from="1696598461560" duration="5292000" />
+      <workItem from="1696688414472" duration="5582000" />
     </task>
     <servers />
   </component>

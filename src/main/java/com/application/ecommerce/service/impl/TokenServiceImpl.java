@@ -26,7 +26,7 @@ public class TokenServiceImpl implements TokenService {
     // get Uer from the token
     @Override
     public User getUser(String token) {
-        AuthenticationToken authenticationToken = tokenRepository.findTokenByToken(token);
+       final AuthenticationToken authenticationToken = tokenRepository.findTokenByToken(token);
         if (Objects.nonNull(authenticationToken)) {
             if (Objects.nonNull(authenticationToken.getUser())) {
                 return authenticationToken.getUser();
