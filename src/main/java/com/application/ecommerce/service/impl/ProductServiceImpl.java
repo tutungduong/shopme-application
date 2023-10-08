@@ -1,6 +1,7 @@
 package com.application.ecommerce.service.impl;
 
 import com.application.ecommerce.dto.ProductDto;
+import com.application.ecommerce.exceptions.ProductNotExistException;
 import com.application.ecommerce.model.Category;
 import com.application.ecommerce.model.Product;
 import com.application.ecommerce.repository.ProductRepository;
@@ -68,4 +69,11 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    @Override
+    public Product getProductById(Integer productId) throws ProductNotExistException {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (!optionalProduct.isPresent())
+            throw new ProductNotExistException("Product id is invalid " + productId);
+        return optionalProduct.get();
+    }
 }
