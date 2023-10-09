@@ -12,17 +12,21 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(value = AuthenticationFailException.class)
-    public final ResponseEntity<String> handleAuthenticationFailException(AuthenticationFailException auth){
-        return new ResponseEntity<>(auth.getMessage(), HttpStatus.BAD_REQUEST);
+    public final ResponseEntity<String> handleAuthenticationFailException(AuthenticationFailException exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ProductNotExistException.class)
-    public final ResponseEntity<String> handleProductNotExistException(ProductNotExistException product){
-        return new ResponseEntity<>(product.getMessage(), HttpStatus.BAD_REQUEST);
+    public final ResponseEntity<String> handleProductNotExistException(ProductNotExistException exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(value = CartItemNotExistException.class)
     public final ResponseEntity<String> handleCartItemNotExistException(CartItemNotExistException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = OrderNotFoundException.class)
+    public final ResponseEntity<String> handleCartItemNotExistException(OrderNotFoundException exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
