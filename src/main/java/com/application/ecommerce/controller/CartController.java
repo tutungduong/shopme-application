@@ -80,4 +80,5 @@ public class CartController {
         cartService.deleteCartItem(cartItemId, user);
         return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Item has been removed"), HttpStatus.OK);
     }
+
 }
