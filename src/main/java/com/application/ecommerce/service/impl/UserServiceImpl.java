@@ -1,21 +1,21 @@
 package com.application.ecommerce.service.impl;
 
 import com.application.ecommerce.config.MessageStrings;
-import com.application.ecommerce.dto.SignInDto;
-import com.application.ecommerce.dto.SignInResponseDto;
-import com.application.ecommerce.dto.SignUpResponseDto;
-import com.application.ecommerce.dto.SignupDto;
+import com.application.ecommerce.dto.user.SignInDto;
+import com.application.ecommerce.dto.user.SignInResponseDto;
+import com.application.ecommerce.dto.user.SignUpResponseDto;
+import com.application.ecommerce.dto.user.SignupDto;
 import com.application.ecommerce.exceptions.AuthenticationFailException;
 import com.application.ecommerce.exceptions.CustomException;
 import com.application.ecommerce.model.AuthenticationToken;
 import com.application.ecommerce.model.User;
-import com.application.ecommerce.repository.TokenRepository;
 import com.application.ecommerce.repository.UserRepository;
-import com.application.ecommerce.service.TokenService;
+import com.application.ecommerce.service.AuthenticationService;
 import com.application.ecommerce.service.UserService;
 import jakarta.xml.bind.DatatypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,54 +25,53 @@ import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private TokenService tokenService;
+    @Autowired
+    UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           TokenService tokenService) {
-        this.userRepository = userRepository;
-        this.tokenService = tokenService;
-    }
+    @Autowired
+    AuthenticationService authenticationService;
+
+
     Logger logger = LoggerFactory.getLogger(UserService.class);
-
-    @Transactional
     @Override
-    public SignUpResponseDto signUp(SignupDto signupDto) {
-        // check if user is already present
-        if(Objects.nonNull(userRepository.findByEmail(signupDto.getEmail()))){
+    public SignUpResponseDto signUp(SignupDto signupDto)  throws CustomException {
+        // Check to see if the current email address has already been registered.
+        if (Objects.nonNull(userRepository.findByEmail(signupDto.getEmail()))) {
             // If the email address has been registered then throw an exception.
-            throw  new CustomException("user already present");
+            throw new CustomException("User already exists");
         }
-        // hash the password
-        String encryptedpassword = signupDto.getPassword();
+        // first encrypt the password
+        String encryptedPassword = signupDto.getPassword();
         try {
-            encryptedpassword = hashPassword(signupDto.getPassword());
+            encryptedPassword = hashPassword(signupDto.getPassword());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             logger.error("hashing password failed {}", e.getMessage());
         }
 
-        User user = new User(signupDto.getLastName(), signupDto.getLastName(), signupDto.getEmail(),encryptedpassword);
+        User user = new User(signupDto.getFirstName(), signupDto.getLastName(), signupDto.getEmail(), encryptedPassword );
         try {
             // save the User
             userRepository.save(user);
-            // success in creating
+            // generate token for user
             final AuthenticationToken authenticationToken = new AuthenticationToken(user);
             // save token in database
-            tokenService.saveConfirmationToken(authenticationToken);
+            authenticationService.saveConfirmationToken(authenticationToken);
+            // success in creating
             return new SignUpResponseDto("success", "user created successfully");
         } catch (Exception e) {
             // handle signup error
             throw new CustomException(e.getMessage());
         }
     }
-    private String hashPassword(String password) throws NoSuchAlgorithmException {
+
+    String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
-        byte [] digest = md.digest();
-        String hash = DatatypeConverter
+        byte[] digest = md.digest();
+        String myHash = DatatypeConverter
                 .printHexBinary(digest).toUpperCase();
-        return hash;
+        return myHash;
     }
     @Override
     public SignInResponseDto signIn(SignInDto signInDto) throws AuthenticationFailException, CustomException {
@@ -93,7 +92,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(e.getMessage());
         }
 
-        AuthenticationToken token = tokenService.getToken(user);
+        AuthenticationToken token = authenticationService.getToken(user);
 
         if(!Objects.nonNull(token)) {
             // token not present
@@ -102,6 +101,5 @@ public class UserServiceImpl implements UserService {
 
         return new SignInResponseDto ("success", token.getToken());
     }
-
 
 }

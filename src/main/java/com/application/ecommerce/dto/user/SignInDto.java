@@ -1,14 +1,16 @@
-package com.application.ecommerce.dto;
+package com.application.ecommerce.dto.user;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StripeResponse {
-    private String sessionId;
+public class SignInDto {
+    private String email;
+    private String password;
 }

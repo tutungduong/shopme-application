@@ -4,7 +4,7 @@ import com.application.ecommerce.exceptions.AuthenticationFailException;
 import com.application.ecommerce.model.AuthenticationToken;
 import com.application.ecommerce.model.User;
 
-public interface TokenService {
+public interface AuthenticationService {
     void saveConfirmationToken(AuthenticationToken authenticationToken);
     User getUser(String token);
     AuthenticationToken getToken(User user);

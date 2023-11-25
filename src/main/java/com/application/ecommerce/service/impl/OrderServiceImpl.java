@@ -1,8 +1,8 @@
 package com.application.ecommerce.service.impl;
 
-import com.application.ecommerce.dto.CartDto;
-import com.application.ecommerce.dto.CartItemDto;
-import com.application.ecommerce.dto.CheckoutItemDto;
+import com.application.ecommerce.dto.cart.CartDto;
+import com.application.ecommerce.dto.cart.CartItemDto;
+import com.application.ecommerce.dto.checkout.CheckoutItemDto;
 import com.application.ecommerce.exceptions.OrderNotFoundException;
 import com.application.ecommerce.model.Order;
 import com.application.ecommerce.model.OrderItem;
@@ -16,6 +16,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,22 +28,24 @@ import java.util.Optional;
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
-    private CartService cartService;
-    private OrderRepository orderRepository;
-    private OrderItemsRepository orderItemsRepository;
 
-    public OrderServiceImpl(CartService cartService, OrderRepository orderRepository, OrderItemsRepository orderItemsRepository) {
-        this.cartService = cartService;
-        this.orderRepository = orderRepository;
-        this.orderItemsRepository = orderItemsRepository;
-    }
+
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    OrderItemsRepository orderItemsRepository;
 
     @Value("${BASE_URL}")
     private String baseURL;
+
     @Value("${STRIPE_SECRET_KEY}")
     private String apiKey;
 
-    // create total price and send productname as input
+    // create total price
     SessionCreateParams.LineItem.PriceData createPriceData(CheckoutItemDto checkoutItemDto) {
         return SessionCreateParams.LineItem.PriceData.builder()
                 .setCurrency("usd")
@@ -65,6 +68,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     // create session from list of checkout items
+    @Override
     public Session createSession(List<CheckoutItemDto> checkoutItemDtoList) throws StripeException {
 
         // supply success and failure url for stripe
@@ -118,13 +122,13 @@ public class OrderServiceImpl implements OrderService {
             // add to order item list
             orderItemsRepository.save(orderItem);
         }
-
+        //
+        cartService.deleteUserCartItems(user);
     }
     @Override
     public List<Order> listOrders(User user) {
         return orderRepository.findAllByUserOrderByCreatedDateDesc(user);
     }
-
     @Override
     // find the order by id, validate if the order belong to user and return
     public Order getOrder(Integer orderId, User user) throws OrderNotFoundException {

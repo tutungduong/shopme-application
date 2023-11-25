@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
+
+    List<Category> listCategories();
     void createCategory(Category category);
-    List<Category> listCategory();
 
-    void editCategory(int categoryId, Category category);
+    Category readCategory(String categoryName);
+    Optional<Category> readCategory(Integer categoryId);
+    void updateCategory(Integer categoryID, Category newCategory);
 
-    boolean findById(int categoryId);
-    Optional<Category> findById(Integer categoryId);
 }

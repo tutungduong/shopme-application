@@ -1,4 +1,5 @@
-package com.application.ecommerce.dto;
+package com.application.ecommerce.dto.user;
+
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -6,17 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDto {
-
-    // List of each item
-    private List<CartItemDto> cartItems;
-    // total cost for the cart
-    private double totalCost;
-
+public class SignupDto {
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
 }

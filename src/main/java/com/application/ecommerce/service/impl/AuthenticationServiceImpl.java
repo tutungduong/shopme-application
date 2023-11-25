@@ -5,28 +5,32 @@ import com.application.ecommerce.exceptions.AuthenticationFailException;
 import com.application.ecommerce.model.AuthenticationToken;
 import com.application.ecommerce.model.User;
 import com.application.ecommerce.repository.TokenRepository;
-import com.application.ecommerce.service.TokenService;
+import com.application.ecommerce.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
-public class TokenServiceImpl implements TokenService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private TokenRepository tokenRepository;
+    @Autowired
+    TokenRepository repository;
 
-    public TokenServiceImpl(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
-    }
+    @Override
     // save the confirmation token
-    @Override
     public void saveConfirmationToken(AuthenticationToken authenticationToken) {
-        tokenRepository.save(authenticationToken);
+        repository.save(authenticationToken);
     }
-    // get Uer from the token
     @Override
+    // get token of the User
+    public AuthenticationToken getToken(User user) {
+        return repository.findTokenByUser(user);
+    }
+    @Override
+    // get Uer from the token
     public User getUser(String token) {
-       final AuthenticationToken authenticationToken = tokenRepository.findTokenByToken(token);
+        AuthenticationToken authenticationToken = repository.findTokenByToken(token);
         if (Objects.nonNull(authenticationToken)) {
             if (Objects.nonNull(authenticationToken.getUser())) {
                 return authenticationToken.getUser();
@@ -34,14 +38,9 @@ public class TokenServiceImpl implements TokenService {
         }
         return null;
     }
-    // get token of the User
     @Override
-    public AuthenticationToken getToken(User user) {
-        return tokenRepository.findTokenByUser(user);
-    }
     // check if the token is valid
-    @Override
-    public void authenticate(String token) throws AuthenticationFailException  {
+    public void authenticate(String token) throws AuthenticationFailException {
         if (!Objects.nonNull(token)) {
             throw new AuthenticationFailException(MessageStrings.AUTH_TOEKN_NOT_PRESENT);
         }

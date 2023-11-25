@@ -4,43 +4,48 @@ package com.application.ecommerce.controller;
 import com.application.ecommerce.common.ApiResponse;
 import com.application.ecommerce.model.Category;
 import com.application.ecommerce.service.CategoryService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
+    @Autowired
     private CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    @GetMapping("/")
+    public ResponseEntity<List<Category>> getCategories() {
+        List<Category> body = categoryService.listCategories();
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createCategory(@RequestBody Category category){
+    public ResponseEntity<ApiResponse> createCategory(@Valid @RequestBody Category category) {
+        if (Objects.nonNull(categoryService.readCategory(category.getCategoryName()))) {
+            return new ResponseEntity<ApiResponse>(new ApiResponse(false, "category already exists"), HttpStatus.CONFLICT);
+        }
         categoryService.createCategory(category);
-        return new ResponseEntity<ApiResponse> (new ApiResponse(true,"a new category created"), HttpStatus.CREATED);
-    }
-    @GetMapping("/")
-    public List<Category> createCategory(){
-        return categoryService.listCategory();
+        return new ResponseEntity<>(new ApiResponse(true, "created the category"), HttpStatus.CREATED);
     }
 
-    @PostMapping("/update/{categoryId}")
-    public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryId") int categoryId, @RequestBody Category category ){
-        System.out.println("Category ID " + categoryId);
+    @PostMapping("/update/{categoryID}")
+    public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryID") Integer categoryID, @Valid @RequestBody Category category) {
         // Check to see if the category exists.
-        if (!categoryService.findById(categoryId)){
-            // If the category doesn't exist then return a response of unsuccessful.
-            return new ResponseEntity<ApiResponse>(new ApiResponse(false,"category does not exists"), HttpStatus.NOT_FOUND);
+        if (Objects.nonNull(categoryService.readCategory(categoryID))) {
+            // If the category exists then update it.
+            categoryService.updateCategory(categoryID, category);
+            return new ResponseEntity<ApiResponse>(new ApiResponse(true, "updated the category"), HttpStatus.OK);
         }
-        // If the category exists then update it.
-        categoryService.editCategory(categoryId,category);
-        return new ResponseEntity<ApiResponse>(new ApiResponse(true,"category has been update"), HttpStatus.OK);
+
+        // If the category doesn't exist then return a response of unsuccessful.
+        return new ResponseEntity<>(new ApiResponse(false, "category does not exist"), HttpStatus.NOT_FOUND);
     }
 }

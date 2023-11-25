@@ -1,4 +1,4 @@
-package com.application.ecommerce.dto;
+package com.application.ecommerce.dto.cart;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,4 +14,13 @@ public class AddToCartDto {
     private Integer id;
     private @NotNull Integer productId;
     private @NotNull Integer quantity;
+
+    @Override
+    public String toString() {
+        return "CartDto{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                ",";
+    }
 }

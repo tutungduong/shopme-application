@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "wishlist")
-public class Wishlist {
+public class WishList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class Wishlist {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Wishlist(User user, Product product) {
+    public WishList(User user, Product product) {
         this.user = user;
         this.product = product;
         this.createdDate = new Date();

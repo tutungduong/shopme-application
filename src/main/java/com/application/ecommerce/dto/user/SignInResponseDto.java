@@ -1,15 +1,15 @@
-package com.application.ecommerce.dto;
+package com.application.ecommerce.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpResponseDto {
+@Setter
+@Getter
+public class SignInResponseDto {
     private String status;
-    private String message;
+    private String token;
 }
